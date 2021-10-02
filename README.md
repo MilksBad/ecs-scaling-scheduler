@@ -1,3 +1,23 @@
+# Introduction
+The ecs-scaling-scheduler uses CloudFormation to provision the AWS resources required to fasilitate the scheduled "shutdown" and "start-up" of the services assiged to a ECS Cluster.  The Dev, Test, and UAT environments are not used after normal working hours and so to save on operating costs the ECS services (app and proxy) can be set to "0" desired running during these peiords of non-use. 
+
+## Original scripts and method
+The solution mostly uses the following, but was incomple and required some modification to get working and other changes to fit into ProjectX. 
+* Originaly found on = https://towardsaws.com/start-stop-aws-ecs-services-on-a-schedule-b35e14d8d2d5
+* Original github = https://github.com/ThomasTusche/ecs-scaling-scheduler
+
+## RTK - Edits / Changes
+* Added launch scripts per environment
+* Added "base.yaml" for cluster CloudFormation
+* Customized names to include project name and enviroment (xxx-dev-thingname) so that resources won't conflict with eacheoother and easily be identified. 
+* "AWS::Lambda::Permission" are required for each rule but was not original included. 
+
+## Potential Improvements
+* Only one Lambda is needed per cloud provider, but in this set up one is created per enviroment. 
+* Curently a ".zip" verion of the python script for Lambda is included. If the Lambd script is updated, the .zip need to be updated manualy. Idealy the launch script would take the exsising scripty and build the zip. 
+
+
+
 # ecs-scaling-scheduler
 Scales all ecs service to 0 or 1 on a specific schedule
 
