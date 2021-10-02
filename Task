@@ -1,0 +1,27 @@
+Please see https://github.com/MilksBad/ecs-scaling-scheduler for reference (and its fork).
+
+Currently, an AWS::Events::Rule sends either ["action": "start", "cluster": "${ClusterName}"] or ["action": "stop", "cluster": "${ClusterName}"] to a Python Lambda function that scales all tasks in a ECS Cluster to 1 or 0. It is used to auto start/stop ECS clusters to follow working hours.
+
+I want to extend the functionality of the existing Lambda function so that it can also:
+•	start/stop AWS RDS PostgreSQL Instance via DB identifier 
+•	start/stop AWS EC2 Instance via Instance ID
+•	start/stop AWS EC2 Auto Scaling group via Auto Scaling group name (set desired, min, and max capacity from 0 to 1)
+
+I was thinking the Python Lambda function could be written to take in:
+•	["action": "start", “servicetype”:”${ServiceTypeName},"target": "${TargetName}"]
+•	["action": "stop", “servicetype”:”${ServiceTypeName},"target": "${TargetName}"]
+Where 
+•	$ServiceTypeName = [ecs|ec2-as|ec2-i]
+•	$TargetName=[Ecs Cluster Name| EC2 Auto Scaling group name| EC2 Instance ID]
+
+
+The ECS portion is already written, but would need to be updated to use “servicetype”.  Don’t worry about updating the CloudFormation, but I will need to know what changes to make to the AWS::IAM::Policy used by the function. 
+
+If needed; the added functionality can be written in separate lambda functions (python scripts). If that is the case, the  “servicetype” does not need to be added/used and the existing ecs functionality doen’t need to be updated. 
+
+
+
+
+At the end; I should have
+•	an updated lambda_function.py (or 3 new Python lambda scripts)
+•	an updated  LambdaRolePolicy (AWS::IAM::Policy) needed to get function to work.
